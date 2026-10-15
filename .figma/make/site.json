@@ -1,0 +1,10 @@
+{
+  "description": "Showcases creative projects and design portfolios with a clean, modern layout to help professionals highlight their work and attract clients.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
