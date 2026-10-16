@@ -162,6 +162,21 @@ function FullscreenMark() {
   )
 }
 
+function SoundMark({ on }: { on: boolean }) {
+  if (on) {
+    return (
+      <svg className="full-mark" viewBox="0 0 16 16" aria-hidden="true">
+        <path d="M2 6.5h2.2L8 3.2v9.6L4.2 9.5H2v-3zm7.2-1.4a3.6 3.6 0 0 1 0 5.8" />
+      </svg>
+    )
+  }
+  return (
+    <svg className="full-mark" viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M2 6.5h2.2L8 3.2v9.6L4.2 9.5H2v-3zm8.2.8 3.6 3.6m0-3.6-3.6 3.6" />
+    </svg>
+  )
+}
+
 function HeroFilm() {
   const heroRef = useRef<HTMLElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -171,6 +186,7 @@ function HeroFilm() {
   const [elapsed, setElapsed] = useState(0)
   const [duration, setDuration] = useState(0)
   const [full, setFull] = useState(false)
+  const [sound, setSound] = useState(false)
 
   useEffect(() => {
     const onChange = () => setFull(Boolean(document.fullscreenElement))
@@ -215,6 +231,22 @@ function HeroFilm() {
 
   const progress = duration > 0 ? Math.min(100, (elapsed / duration) * 100) : 0
 
+  const toggleSound = () => {
+    const video = videoRef.current
+    if (!video) return
+    const turningOn = video.muted || video.volume === 0
+    if (turningOn) {
+      video.muted = false
+      video.volume = 1
+      video.removeAttribute('muted')
+      setSound(true)
+      if (video.paused) void video.play()
+      return
+    }
+    video.muted = true
+    setSound(false)
+  }
+
   const fullscreen = () => {
     const video = videoRef.current as (HTMLVideoElement & {
       webkitEnterFullscreen?: () => void
@@ -254,8 +286,11 @@ function HeroFilm() {
         ref={(node) => {
           videoRef.current = node
           if (!node) return
+          node.defaultMuted = true
+          if (node.dataset.booted === '1') return
           node.muted = true
           node.setAttribute('muted', '')
+          node.dataset.booted = '1'
         }}
         onTimeUpdate={sync}
         onLoadedMetadata={sync}
@@ -306,6 +341,10 @@ function HeroFilm() {
         <span className="hero-time">
           {formatTime(elapsed)} / {formatTime(duration)}
         </span>
+        <button type="button" className="hero-full" onClick={toggleSound} aria-pressed={sound} aria-label={sound ? 'Sound on' : 'Sound off'}>
+          <SoundMark on={sound} />
+          <span>{sound ? 'Sound on' : 'Sound off'}</span>
+        </button>
         <button type="button" className="hero-full" onClick={fullscreen} aria-label={full ? 'Leave full screen' : 'Full screen'}>
           <FullscreenMark />
           <span>{full ? 'Exit' : 'Full screen'}</span>
