@@ -151,13 +151,36 @@ function EpPlayer() {
   )
 }
 
+const HERO_FILM =
+  'https://github.com/josephblacklake/BlacklakeWebsite/releases/download/hero-original/blacklake-hero-original.mp4'
+
+function FullscreenMark() {
+  return (
+    <svg className="full-mark" viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M2 6V2h4M14 6V2h-4M2 10v4h4M14 10v4h-4" />
+    </svg>
+  )
+}
+
 function HeroFilm() {
+  const heroRef = useRef<HTMLElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
   const barRef = useRef<HTMLDivElement>(null)
   const dragging = useRef(false)
   const [playing, setPlaying] = useState(true)
   const [elapsed, setElapsed] = useState(0)
   const [duration, setDuration] = useState(0)
+  const [full, setFull] = useState(false)
+
+  useEffect(() => {
+    const onChange = () => setFull(Boolean(document.fullscreenElement))
+    document.addEventListener('fullscreenchange', onChange)
+    document.addEventListener('webkitfullscreenchange', onChange)
+    return () => {
+      document.removeEventListener('fullscreenchange', onChange)
+      document.removeEventListener('webkitfullscreenchange', onChange)
+    }
+  }, [])
 
   const sync = () => {
     const video = videoRef.current
@@ -192,8 +215,33 @@ function HeroFilm() {
 
   const progress = duration > 0 ? Math.min(100, (elapsed / duration) * 100) : 0
 
+  const fullscreen = () => {
+    const video = videoRef.current as (HTMLVideoElement & {
+      webkitEnterFullscreen?: () => void
+      webkitExitFullscreen?: () => void
+      webkitDisplayingFullscreen?: boolean
+    }) | null
+    const hero = heroRef.current
+    if (!video) return
+    if (document.fullscreenElement) {
+      void document.exitFullscreen()
+      return
+    }
+    if (video.webkitDisplayingFullscreen) {
+      video.webkitExitFullscreen?.()
+      return
+    }
+    const ios = /iPhone|iPad|iPod/.test(navigator.userAgent)
+    if (ios && video.webkitEnterFullscreen) {
+      video.webkitEnterFullscreen()
+      return
+    }
+    const target = hero ?? video
+    if (target.requestFullscreen) void target.requestFullscreen()
+  }
+
   return (
-    <section id="top" className="hero">
+    <section id="top" className="hero" ref={heroRef}>
       <video
         className="hero-image"
         autoPlay
@@ -214,7 +262,7 @@ function HeroFilm() {
         onPlay={() => setPlaying(true)}
         onPause={() => setPlaying(false)}
       >
-        <source src={`${base}hero-web.mp4`} type="video/mp4" />
+        <source src={HERO_FILM} type="video/mp4" />
       </video>
       <div className="hero-overlay" />
       <div className="hero-controls">
@@ -258,6 +306,9 @@ function HeroFilm() {
         <span className="hero-time">
           {formatTime(elapsed)} / {formatTime(duration)}
         </span>
+        <button type="button" onClick={fullscreen} aria-label={full ? 'Leave full screen' : 'Full screen'}>
+          <FullscreenMark />
+        </button>
       </div>
     </section>
   )
