@@ -182,11 +182,12 @@ function HeroFilm() {
   const videoRef = useRef<HTMLVideoElement>(null)
   const barRef = useRef<HTMLDivElement>(null)
   const dragging = useRef(false)
-  const [playing, setPlaying] = useState(true)
+  const [playing, setPlaying] = useState(false)
+  const [started, setStarted] = useState(false)
   const [elapsed, setElapsed] = useState(0)
   const [duration, setDuration] = useState(0)
   const [full, setFull] = useState(false)
-  const [sound, setSound] = useState(false)
+  const [sound, setSound] = useState(true)
 
   useEffect(() => {
     const onChange = () => setFull(Boolean(document.fullscreenElement))
@@ -221,8 +222,14 @@ function HeroFilm() {
     const video = videoRef.current
     if (!video) return
     if (video.paused) {
+      if (sound) {
+        video.muted = false
+        video.volume = 1
+        video.removeAttribute('muted')
+      }
       void video.play()
       setPlaying(true)
+      setStarted(true)
     } else {
       video.pause()
       setPlaying(false)
@@ -276,21 +283,15 @@ function HeroFilm() {
     <section id="top" className="hero" ref={heroRef}>
       <video
         className="hero-image"
-        autoPlay
-        muted
         loop
         playsInline
-        preload="auto"
+        preload="metadata"
         poster={blacklakeHero}
         aria-label="Blacklake hero film"
         ref={(node) => {
           videoRef.current = node
           if (!node) return
-          node.defaultMuted = true
-          if (node.dataset.booted === '1') return
-          node.muted = true
-          node.setAttribute('muted', '')
-          node.dataset.booted = '1'
+          node.volume = 1
         }}
         onTimeUpdate={sync}
         onLoadedMetadata={sync}
@@ -300,6 +301,12 @@ function HeroFilm() {
         <source src={HERO_FILM} type="video/mp4" />
       </video>
       <div className="hero-overlay" />
+      {!started && (
+        <button type="button" className="hero-start" onClick={toggle}>
+          <PlayMark playing={false} />
+          <span>Watch the Blacklake Documentary</span>
+        </button>
+      )}
       <div className="hero-controls">
         <button type="button" onClick={toggle} aria-label={playing ? 'Pause film' : 'Play film'}>
           <PlayMark playing={playing} />
