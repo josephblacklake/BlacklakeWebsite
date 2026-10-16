@@ -51,8 +51,8 @@ button { color: inherit; font: inherit; }
 .menu-links svg { width: 27px; fill: currentColor; opacity: 0; transform: rotate(-30deg); transition: .3s; }
 .menu-links a:hover svg { opacity: 1; transform: rotate(0); }
 
-.hero { height: 100svh; min-height: 640px; margin: 0; padding: 0; position: relative; overflow: hidden; background: #080909; }
-.hero-image { position: absolute; left: 0; top: -2.4%; width: 100%; height: 108%; object-fit: cover; object-position: center top; filter: contrast(1.06); animation: hero-in 1.5s cubic-bezier(.2,.65,.25,1) both; pointer-events: none; }
+.hero { height: 100svh; height: 100dvh; margin: 0; padding: 0; position: relative; overflow: hidden; background: #080909; }
+.hero-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center center; filter: contrast(1.06); animation: hero-in 1.5s cubic-bezier(.2,.65,.25,1) both; pointer-events: none; }
 .hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, #0000001f 35%, #000000d9 100%), linear-gradient(90deg, #00000052, transparent 58%); }
 @keyframes hero-in { from { opacity: 0; transform: scale(1.04); } to { opacity: 1; transform: scale(1); } }
 
@@ -63,9 +63,7 @@ button { color: inherit; font: inherit; }
 .story-content { position: relative; height: 100%; width: min(49%, 750px); padding: 105px 28px 34px; display: flex; flex-direction: column; }
 .story-main { margin: auto 0; }
 .story h2 { margin: 0; font-size: clamp(48px, 6.2vw, 98px); line-height: .92; font-weight: 500; letter-spacing: -.065em; text-wrap: balance; }
-.story-main > p { max-width: 480px; margin: 28px 0 0; font-size: clamp(17px, 1.45vw, 23px); line-height: 1.35; letter-spacing: -.02em; color: #d0d2cd; }
-.round-link { display: flex; justify-content: space-between; align-items: center; width: 210px; padding: 16px 18px; border: 1px solid #aaa; border-radius: 100px; font: 11px DM Mono, monospace; text-transform: uppercase; transition: .3s; }
-.round-link:hover { background: #f1f1eb; color: #090a09; border-color: #f1f1eb; }
+.story-main > p { max-width: 34rem; margin: 28px 0 0; font-size: clamp(17px, 1.2vw, 22px); line-height: 1.35; letter-spacing: -.02em; color: #d0d2cd; }
 .section-index { position: absolute; right: 28px; bottom: 28px; font: 11px DM Mono, monospace; }
 
 .ep { position: relative; padding: 120px 28px 88px; background: #080909; color: #f4f4ef; }
@@ -95,15 +93,9 @@ footer { min-height: 78svh; padding: 32px; background: #c8ccc7; color: #fff; pos
 .footer-details p { margin: 0; }
 .footer-details a { white-space: nowrap; }
 
-@media (max-width: 700px) {
-  .site-header { height: 62px; padding: 0 18px; }
-  .brand img { width: 140px; }
-  .menu-panel { padding: 90px 18px 25px; }
-  .menu-links a { grid-template-columns: 40px 1fr 28px; font-size: 42px; padding: 17px 0; }
-.hero-image { object-position: 53% center; }
-
 .gate {
   min-height: 100svh;
+  min-height: 100dvh;
   margin: 0;
   padding: 18vh 28px 48px;
   display: flex;
@@ -112,7 +104,7 @@ footer { min-height: 78svh; padding: 32px; background: #c8ccc7; color: #fff; pos
   background: #080909;
   color: #f4f4ef;
 }
-.gate img { width: 168px; height: auto; filter: brightness(0) invert(1); }
+.gate img { width: min(168px, 70vw); height: auto; filter: brightness(0) invert(1); }
 .gate form { width: min(420px, 100%); margin-top: 56px; display: flex; flex-direction: column; align-items: flex-start; }
 .gate label { font: 11px DM Mono, monospace; letter-spacing: .08em; text-transform: uppercase; color: #bfc2bc; }
 .gate input {
@@ -141,7 +133,14 @@ footer { min-height: 78svh; padding: 32px; background: #c8ccc7; color: #fff; pos
   text-transform: uppercase;
 }
 .gate button:hover { background: #f1f1eb; color: #090a09; }
-  .story { min-height: 720px; }
+
+@media (max-width: 700px) {
+  .site-header { height: 62px; padding: 0 18px; }
+  .brand img { width: 140px; }
+  .menu-panel { padding: 90px 18px 25px; }
+  .menu-links a { grid-template-columns: 40px 1fr 28px; font-size: 42px; padding: 17px 0; }
+  .gate { padding: 14vh 18px 36px; }
+  .story { min-height: 100svh; }
   .story-shade { background: linear-gradient(0deg, #050605f5 0, #07080788 60%, #0001); }
   .story-content { width: 100%; padding: 90px 18px 26px; }
   .story-main { margin-top: auto; margin-bottom: 45px; }

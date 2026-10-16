@@ -211,8 +211,13 @@ function Site() {
           preload="auto"
           poster={blacklakeHero}
           aria-label="Blacklake hero film"
+          ref={(node) => {
+            if (!node) return
+            node.muted = true
+            node.setAttribute('muted', '')
+          }}
         >
-          <source src={`${base}hero.mp4`} type="video/mp4" />
+          <source src={`${base}hero-web.mp4`} type="video/mp4" />
         </video>
         <div className="hero-overlay" />
       </section>
@@ -245,7 +250,7 @@ function Site() {
         <div className="footer-bottom">
           <img src={blacklakeWordmark} alt="Blacklake" />
           <div className="footer-details">
-            <p>Blacklake, Inc.<br />Washington, DC USA&nbsp; {time}</p>
+            <p>Washington, DC USA&nbsp; {time}</p>
             <a href="#top">Privacy &amp; Terms</a>
           </div>
         </div>
