@@ -306,8 +306,9 @@ function HeroFilm() {
         <span className="hero-time">
           {formatTime(elapsed)} / {formatTime(duration)}
         </span>
-        <button type="button" onClick={fullscreen} aria-label={full ? 'Leave full screen' : 'Full screen'}>
+        <button type="button" className="hero-full" onClick={fullscreen} aria-label={full ? 'Leave full screen' : 'Full screen'}>
           <FullscreenMark />
+          <span>{full ? 'Exit' : 'Full screen'}</span>
         </button>
       </div>
     </section>
