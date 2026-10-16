@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react'
-import { flushSync } from 'react-dom'
 import blacklakeWordmark from './assets/blacklake-wordmark.png'
 import blacklakeHero from './assets/blacklake-hero.png'
 import dilemmaStill from './assets/dilemma.jpg'
@@ -178,7 +177,7 @@ function SoundMark({ on }: { on: boolean }) {
   )
 }
 
-function HeroFilm({ startAudible }: { startAudible: boolean }) {
+function HeroFilm() {
   const heroRef = useRef<HTMLElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
   const barRef = useRef<HTMLDivElement>(null)
@@ -187,7 +186,7 @@ function HeroFilm({ startAudible }: { startAudible: boolean }) {
   const [elapsed, setElapsed] = useState(0)
   const [duration, setDuration] = useState(0)
   const [full, setFull] = useState(false)
-  const [sound, setSound] = useState(startAudible)
+  const [sound, setSound] = useState(true)
 
   useEffect(() => {
     const onChange = () => setFull(Boolean(document.fullscreenElement))
@@ -281,11 +280,10 @@ function HeroFilm({ startAudible }: { startAudible: boolean }) {
     <section id="top" className="hero" ref={heroRef}>
       <video
         className="hero-image"
-        autoPlay
         muted={!sound}
         loop
         playsInline
-        preload="auto"
+        preload="metadata"
         poster={blacklakeHero}
         aria-label="Blacklake hero film"
         ref={(node) => {
@@ -293,6 +291,7 @@ function HeroFilm({ startAudible }: { startAudible: boolean }) {
           if (!node) return
           node.volume = 1
         }}
+        onClick={toggle}
         onTimeUpdate={sync}
         onLoadedMetadata={sync}
         onPlay={() => setPlaying(true)}
@@ -301,6 +300,7 @@ function HeroFilm({ startAudible }: { startAudible: boolean }) {
         <source src={HERO_FILM} type="video/mp4" />
       </video>
       <div className="hero-overlay" />
+      <p className={`hero-start ${playing ? 'is-gone' : ''}`}>Watch the Blacklake Documentary</p>
       <div className="hero-controls">
         <button type="button" className="hero-icon" onClick={toggleSound} aria-pressed={sound} aria-label={sound ? 'Mute' : 'Unmute'}>
           <SoundMark on={sound} />
@@ -353,7 +353,7 @@ function HeroFilm({ startAudible }: { startAudible: boolean }) {
   )
 }
 
-function Site({ startAudible }: { startAudible: boolean }) {
+function Site() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [time, setTime] = useState('')
 
@@ -403,7 +403,7 @@ function Site({ startAudible }: { startAudible: boolean }) {
         </div>
       </nav>
 
-      <HeroFilm startAudible={startAudible} />
+      <HeroFilm />
 
       {sections.map((section, index) => (
         <section className="story" id={`section-${index + 1}`} key={section.title}>
@@ -452,13 +452,7 @@ function Gate({ onOpen }: { onOpen: () => void }) {
     event.preventDefault()
     if (value === 'temetalexandria') {
       sessionStorage.setItem(ACCESS, '1')
-      flushSync(() => onOpen())
-      const video = document.querySelector('.hero-image')
-      if (video instanceof HTMLVideoElement) {
-        video.muted = false
-        video.volume = 1
-        void video.play()
-      }
+      onOpen()
       return
     }
     setWrong(true)
@@ -490,7 +484,6 @@ function Gate({ onOpen }: { onOpen: () => void }) {
 
 export default function App() {
   const [open, setOpen] = useState(() => sessionStorage.getItem(ACCESS) === '1')
-  const [audible, setAudible] = useState(false)
-  if (!open) return <Gate onOpen={() => { setAudible(true); setOpen(true) }} />
-  return <Site startAudible={audible} />
+  if (!open) return <Gate onOpen={() => setOpen(true)} />
+  return <Site />
 }
