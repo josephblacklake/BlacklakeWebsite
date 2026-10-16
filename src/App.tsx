@@ -16,7 +16,7 @@ const sections = [
     title: 'The current dilemma',
     body: 'Young technologists assume they understand the warfighter, but not how Washington functions. That gap means the warfighter is not served the way the work has to happen. Blacklake reorients the outside to those systems, so the people who run into the fire get better support.',
     image: dilemmaStill,
-    alt: 'Blacklake founder speaking about the gap between technologists and the warfighter',
+    alt: 'A line diagram of paths from the market to the battlefield',
   },
   {
     title: 'Networked sovereignty',
@@ -24,7 +24,7 @@ const sections = [
     cta: 'Listen',
     href: '#ep',
     image: sovereigntyStill,
-    alt: 'A speaker on networked sovereignty and a nation’s own capabilities',
+    alt: 'A drawn diagram of companies cataloged around a central mark',
   },
 ]
 
