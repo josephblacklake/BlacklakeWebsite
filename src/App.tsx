@@ -21,8 +21,6 @@ const sections = [
   {
     title: 'Networked sovereignty',
     body: 'Alexandria gives companies the infrastructure to compete, and catalogs what they are building. Not by replacing the primes, but by letting thousands of companies serve nations at the speed the world moves.',
-    cta: 'Listen',
-    href: '#ep',
     image: sovereigntyStill,
     alt: 'A drawn diagram of companies cataloged around a central mark',
   },
@@ -228,12 +226,6 @@ function Site() {
               <h2>{section.title}</h2>
               <p>{section.body}</p>
             </div>
-            {section.cta && (
-              <a href={section.href} className="round-link">
-                <span>{section.cta}</span>
-                <span>→</span>
-              </a>
-            )}
           </div>
           <div className="section-index">0{index + 1}</div>
         </section>
