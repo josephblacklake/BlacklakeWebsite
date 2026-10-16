@@ -451,7 +451,7 @@ function Gate({ onOpen }: { onOpen: () => void }) {
 
   const submit = (event: FormEvent) => {
     event.preventDefault()
-    if (value === 'temetalexandria') {
+    if (value === 'kemetalexandria') {
       sessionStorage.setItem(ACCESS, '1')
       onOpen()
       return
