@@ -151,6 +151,118 @@ function EpPlayer() {
   )
 }
 
+function HeroFilm() {
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const barRef = useRef<HTMLDivElement>(null)
+  const dragging = useRef(false)
+  const [playing, setPlaying] = useState(true)
+  const [elapsed, setElapsed] = useState(0)
+  const [duration, setDuration] = useState(0)
+
+  const sync = () => {
+    const video = videoRef.current
+    if (!video || dragging.current) return
+    setElapsed(video.currentTime)
+    setDuration(Number.isFinite(video.duration) ? video.duration : 0)
+    setPlaying(!video.paused)
+  }
+
+  const seek = (clientX: number) => {
+    const video = videoRef.current
+    const bar = barRef.current
+    if (!video || !bar || !Number.isFinite(video.duration) || video.duration <= 0) return
+    const rect = bar.getBoundingClientRect()
+    const ratio = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width))
+    video.currentTime = ratio * video.duration
+    setElapsed(video.currentTime)
+    setDuration(video.duration)
+  }
+
+  const toggle = () => {
+    const video = videoRef.current
+    if (!video) return
+    if (video.paused) {
+      void video.play()
+      setPlaying(true)
+    } else {
+      video.pause()
+      setPlaying(false)
+    }
+  }
+
+  const progress = duration > 0 ? Math.min(100, (elapsed / duration) * 100) : 0
+
+  return (
+    <section id="top" className="hero">
+      <video
+        className="hero-image"
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+        poster={blacklakeHero}
+        aria-label="Blacklake hero film"
+        ref={(node) => {
+          videoRef.current = node
+          if (!node) return
+          node.muted = true
+          node.setAttribute('muted', '')
+        }}
+        onTimeUpdate={sync}
+        onLoadedMetadata={sync}
+        onPlay={() => setPlaying(true)}
+        onPause={() => setPlaying(false)}
+      >
+        <source src={`${base}hero-web.mp4`} type="video/mp4" />
+      </video>
+      <div className="hero-overlay" />
+      <div className="hero-controls">
+        <button type="button" onClick={toggle} aria-label={playing ? 'Pause film' : 'Play film'}>
+          <PlayMark playing={playing} />
+        </button>
+        <div
+          className="hero-bar"
+          ref={barRef}
+          role="slider"
+          tabIndex={0}
+          aria-label="Film position"
+          aria-valuemin={0}
+          aria-valuemax={Math.round(duration)}
+          aria-valuenow={Math.round(elapsed)}
+          onPointerDown={(event) => {
+            dragging.current = true
+            event.currentTarget.setPointerCapture(event.pointerId)
+            seek(event.clientX)
+          }}
+          onPointerMove={(event) => {
+            if (dragging.current) seek(event.clientX)
+          }}
+          onPointerUp={() => {
+            dragging.current = false
+          }}
+          onPointerCancel={() => {
+            dragging.current = false
+          }}
+          onKeyDown={(event) => {
+            const video = videoRef.current
+            if (!video || !video.duration) return
+            if (event.key === 'ArrowRight') video.currentTime = Math.min(video.duration, video.currentTime + 5)
+            if (event.key === 'ArrowLeft') video.currentTime = Math.max(0, video.currentTime - 5)
+          }}
+        >
+          <span>
+            <span style={{ width: `${progress}%` }} />
+          </span>
+        </div>
+        <span className="hero-time">
+          {formatTime(elapsed)} / {formatTime(duration)}
+        </span>
+      </div>
+    </section>
+  )
+}
+
 function Site() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [time, setTime] = useState('')
@@ -201,26 +313,7 @@ function Site() {
         </div>
       </nav>
 
-      <section id="top" className="hero">
-        <video
-          className="hero-image"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          poster={blacklakeHero}
-          aria-label="Blacklake hero film"
-          ref={(node) => {
-            if (!node) return
-            node.muted = true
-            node.setAttribute('muted', '')
-          }}
-        >
-          <source src={`${base}hero-web.mp4`} type="video/mp4" />
-        </video>
-        <div className="hero-overlay" />
-      </section>
+      <HeroFilm />
 
       {sections.map((section, index) => (
         <section className="story" id={`section-${index + 1}`} key={section.title}>

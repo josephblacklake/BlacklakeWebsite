@@ -53,7 +53,14 @@ button { color: inherit; font: inherit; }
 
 .hero { height: 100svh; height: 100dvh; margin: 0; padding: 0; position: relative; overflow: hidden; background: #080909; }
 .hero-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center center; filter: contrast(1.06); animation: hero-in 1.5s cubic-bezier(.2,.65,.25,1) both; pointer-events: none; }
-.hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, #0000001f 35%, #000000d9 100%), linear-gradient(90deg, #00000052, transparent 58%); }
+.hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, #0000001f 35%, #000000b0 100%), linear-gradient(90deg, #00000052, transparent 58%); pointer-events: none; }
+.hero-controls { position: absolute; z-index: 5; left: 0; right: 0; bottom: 0; display: flex; align-items: center; gap: 12px; padding: 28px 22px 18px; background: linear-gradient(180deg, transparent, #000000c7); }
+.hero-controls button { width: 44px; height: 44px; flex: none; display: grid; place-items: center; border: 0; background: none; cursor: pointer; }
+.hero-controls .play-mark { width: 16px; height: 16px; }
+.hero-bar { flex: 1; height: 36px; display: flex; align-items: center; cursor: pointer; touch-action: none; }
+.hero-bar > span { display: block; width: 100%; height: 3px; border-radius: 2px; background: #ffffff55; }
+.hero-bar > span > span { display: block; height: 100%; background: #fff; }
+.hero-time { flex: none; font: 11px DM Mono, monospace; color: #f4f4ef; letter-spacing: .02em; white-space: nowrap; }
 @keyframes hero-in { from { opacity: 0; transform: scale(1.04); } to { opacity: 1; transform: scale(1); } }
 
 .story { height: 100svh; min-height: 650px; position: relative; overflow: hidden; background: #0a0a0a; }
@@ -94,33 +101,52 @@ footer { min-height: 78svh; padding: 32px; background: #c8ccc7; color: #fff; pos
 .footer-details a { white-space: nowrap; }
 
 .gate {
+  width: 100%;
+  max-width: 100%;
   min-height: 100svh;
   min-height: 100dvh;
   margin: 0;
-  padding: 18vh 28px 48px;
+  padding: clamp(72px, 18vh, 180px) clamp(18px, 4vw, 48px) 64px;
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   justify-content: center;
+  overflow-x: hidden;
   background: #080909;
   color: #f4f4ef;
 }
-.gate img { width: min(168px, 70vw); height: auto; filter: brightness(0) invert(1); }
-.gate form { width: min(420px, 100%); margin-top: 56px; display: flex; flex-direction: column; align-items: flex-start; }
-.gate label { font: 11px DM Mono, monospace; letter-spacing: .08em; text-transform: uppercase; color: #bfc2bc; }
+.gate img {
+  display: block;
+  width: min(240px, 64vw);
+  max-width: 100%;
+  height: auto;
+  max-height: 40px;
+  object-fit: contain;
+  object-position: left center;
+  filter: brightness(0) invert(1);
+}
+.gate form { width: min(420px, 100%); margin-top: 48px; display: flex; flex-direction: column; align-items: flex-start; }
+.gate label { display: block; font: 11px DM Mono, monospace; letter-spacing: .14em; text-transform: uppercase; color: #bfc2bc; }
 .gate input {
+  display: block;
   width: 100%;
-  margin-top: 12px;
-  padding: 12px 0;
+  margin-top: 14px;
+  padding: 14px 0;
   border: 0;
   border-bottom: 1px solid #3a3c3a;
+  border-radius: 0;
   background: transparent;
+  box-shadow: none;
   color: inherit;
   font: 18px Inter, Helvetica, Arial, sans-serif;
   outline: none;
+  appearance: none;
+  -webkit-appearance: none;
 }
 .gate input:focus { border-bottom-color: #f4f4ef; }
 .gate p { margin: 14px 0 0; font: 13px DM Mono, monospace; color: #e4d3bc; }
 .gate button {
+  display: block;
   margin-top: 28px;
   padding: 14px 28px;
   border: 1px solid #aaa;
@@ -140,6 +166,7 @@ footer { min-height: 78svh; padding: 32px; background: #c8ccc7; color: #fff; pos
   .menu-panel { padding: 90px 18px 25px; }
   .menu-links a { grid-template-columns: 40px 1fr 28px; font-size: 42px; padding: 17px 0; }
   .gate { padding: 14vh 18px 36px; }
+  .hero-controls { gap: 8px; padding: 22px 14px 14px; }
   .story { min-height: 100svh; }
   .story-shade { background: linear-gradient(0deg, #050605f5 0, #07080788 60%, #0001); }
   .story-content { width: 100%; padding: 90px 18px 26px; }
