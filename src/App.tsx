@@ -283,6 +283,7 @@ function HeroFilm() {
         muted={!sound}
         loop
         playsInline
+        controls={false}
         preload="metadata"
         poster={blacklakeHero}
         aria-label="Blacklake hero film"
@@ -301,7 +302,7 @@ function HeroFilm() {
       </video>
       <div className="hero-overlay" />
       <p className={`hero-start ${playing ? 'is-gone' : ''}`}>Watch the Blacklake Documentary</p>
-      <div className="hero-controls">
+      <div className="hero-controls" onClick={(event) => event.stopPropagation()}>
         <button type="button" className="hero-icon" onClick={toggleSound} aria-pressed={sound} aria-label={sound ? 'Mute' : 'Unmute'}>
           <SoundMark on={sound} />
         </button>
