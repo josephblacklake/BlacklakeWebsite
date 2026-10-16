@@ -1,6 +1,8 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type FormEvent } from 'react'
 import blacklakeWordmark from './assets/blacklake-wordmark.png'
 import blacklakeHero from './assets/blacklake-hero.png'
+import dilemmaStill from './assets/dilemma.jpg'
+import sovereigntyStill from './assets/sovereignty.jpg'
 
 const nav = [
   { label: 'Home', href: '#top' },
@@ -13,29 +15,29 @@ const sections = [
   {
     title: 'The current dilemma',
     body: 'Young technologists assume they understand the warfighter, but not how Washington functions. That gap means the warfighter is not served the way the work has to happen. Blacklake reorients the outside to those systems, so the people who run into the fire get better support.',
-    image:
-      'https://images.unsplash.com/photo-1579912437766-7896df6d3cd3?auto=format&fit=crop&w=2200&q=90',
-    alt: 'A service member equipped for the field',
+    image: dilemmaStill,
+    alt: 'Blacklake founder speaking about the gap between technologists and the warfighter',
   },
   {
     title: 'Networked sovereignty',
     body: 'Alexandria gives companies the infrastructure to compete, and catalogs what they are building. Not by replacing the primes, but by letting thousands of companies serve nations at the speed the world moves.',
     cta: 'Listen',
     href: '#ep',
-    image:
-      'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&w=2200&q=90',
-    alt: 'Shelves in a cataloged library',
+    image: sovereigntyStill,
+    alt: 'A speaker on networked sovereignty and a nation’s own capabilities',
   },
 ]
 
+const base = import.meta.env.BASE_URL
+
 const tracks = [
-  { title: 'An Unquiet Peace', src: '/ep/01-an-unquiet-peace.wav' },
-  { title: 'The Long Game', src: '/ep/02-the-long-game.wav' },
-  { title: 'The Quiet Professionals', src: '/ep/03-the-quiet-professionals.wav' },
-  { title: 'A Beautiful Enterprise', src: '/ep/04-a-beautiful-enterprise.wav' },
-  { title: 'The Ties That Bind', src: '/ep/05-the-ties-that-bind.wav' },
-  { title: 'Bully in the Playground', src: '/ep/06-bully-in-the-playground.wav' },
-  { title: 'The Better Angels', src: '/ep/07-the-better-angels.wav' },
+  { title: 'An Unquiet Peace', src: `${base}ep/01-an-unquiet-peace.wav` },
+  { title: 'The Long Game', src: `${base}ep/02-the-long-game.wav` },
+  { title: 'The Quiet Professionals', src: `${base}ep/03-the-quiet-professionals.wav` },
+  { title: 'A Beautiful Enterprise', src: `${base}ep/04-a-beautiful-enterprise.wav` },
+  { title: 'The Ties That Bind', src: `${base}ep/05-the-ties-that-bind.wav` },
+  { title: 'Bully in the Playground', src: `${base}ep/06-bully-in-the-playground.wav` },
+  { title: 'The Better Angels', src: `${base}ep/07-the-better-angels.wav` },
 ]
 
 function formatTime(seconds: number) {
@@ -151,7 +153,7 @@ function EpPlayer() {
   )
 }
 
-export default function App() {
+function Site() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [time, setTime] = useState('')
 
@@ -212,7 +214,7 @@ export default function App() {
           poster={blacklakeHero}
           aria-label="Blacklake hero film"
         >
-          <source src="/hero.mp4" type="video/mp4" />
+          <source src={`${base}hero.mp4`} type="video/mp4" />
         </video>
         <div className="hero-overlay" />
       </section>
@@ -258,4 +260,50 @@ export default function App() {
       </footer>
     </main>
   )
+}
+
+const ACCESS = 'blacklake-open'
+
+function Gate({ onOpen }: { onOpen: () => void }) {
+  const [value, setValue] = useState('')
+  const [wrong, setWrong] = useState(false)
+
+  const submit = (event: FormEvent) => {
+    event.preventDefault()
+    if (value === 'temetalexandria') {
+      sessionStorage.setItem(ACCESS, '1')
+      onOpen()
+      return
+    }
+    setWrong(true)
+  }
+
+  return (
+    <main className="gate">
+      <img src={blacklakeWordmark} alt="Blacklake" />
+      <form onSubmit={submit}>
+        <label htmlFor="gate-pass">Password</label>
+        <input
+          id="gate-pass"
+          type="password"
+          value={value}
+          autoFocus
+          autoComplete="off"
+          aria-invalid={wrong}
+          onChange={(event) => {
+            setValue(event.target.value)
+            setWrong(false)
+          }}
+        />
+        {wrong && <p role="alert">That password is not right.</p>}
+        <button type="submit">Enter</button>
+      </form>
+    </main>
+  )
+}
+
+export default function App() {
+  const [open, setOpen] = useState(() => sessionStorage.getItem(ACCESS) === '1')
+  if (!open) return <Gate onOpen={() => setOpen(true)} />
+  return <Site />
 }
