@@ -82,7 +82,18 @@ export default function App() {
       </nav>
 
       <section id="top" className="hero">
-        <img className="hero-image" src={blacklakeHero} alt="Aircraft manufacturing floor" />
+        <video
+          className="hero-image"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          poster={blacklakeHero}
+          aria-label="Blacklake hero film"
+        >
+          <source src="/hero.mp4" type="video/mp4" />
+        </video>
         <div className="hero-overlay" />
         <div className="hero-copy">
           <p>Advanced energy / United States</p>

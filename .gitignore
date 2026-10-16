@@ -1,5 +1,7 @@
 node_modules/
 dist/
+public/hero.mp4
+.tools/
 build/
 .cache/
 .env*
